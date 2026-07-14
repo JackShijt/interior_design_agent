@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# 环境配置（含密钥）
+.env
+*.local
+
+# IDE
+.idea/
+.vscode/
+
+# 临时/输出
+tmp/
+*.log
+.DS_Store
+
+# 大模型缓存
+models/
+*.cache

@@ -1,0 +1,37 @@
+{
+  "components": [
+    {
+      "id": "wd_01", "cat": "wardrobe", "name": "现代简约趟门衣柜",
+      "size": [1800, 600, 2400],
+      "param_rules": {"width": [900, 3000], "depth": [500, 650]},
+      "materials": ["oak", "white_eco"],
+      "price": 3200,
+      "price_per_mm_width": 1.5,
+      "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}],
+      "drawing_rule": "立面图标注宽高深",
+      "style_tags": ["modern_minimal"]
+    },
+    {
+      "id": "bed_01", "cat": "bed", "name": "1.8m 双人床",
+      "size": [1800, 2000, 450],
+      "param_rules": {"width": [1000, 2000]},
+      "materials": ["fabric", "wood"],
+      "price": 2600,
+      "price_per_mm_width": 1.0,
+      "bom_template": [{"name": "床架", "unit": "套"}],
+      "drawing_rule": "平面标注外廓，侧边留通道≥500",
+      "style_tags": ["modern_minimal", "warm"]
+    },
+    {
+      "id": "sofa_01", "cat": "sofa", "name": "三人布艺沙发",
+      "size": [2200, 900, 800],
+      "param_rules": {"width": [1400, 3000]},
+      "materials": ["fabric"],
+      "price": 3500,
+      "price_per_mm_width": 1.2,
+      "bom_template": [{"name": "沙发", "unit": "套"}],
+      "drawing_rule": "平面标注外廓",
+      "style_tags": ["modern_minimal", "warm"]
+    }
+  ]
+}

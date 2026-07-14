@@ -1,0 +1,83 @@
+version: 1.0
+scope: china_residential_general
+
+rules:
+  - id: A001
+    category: structural_safety
+    level: block
+    name: 承重墙禁止拆除
+    condition:
+      action: remove_wall
+      wall_type: bearing
+    action:
+      type: block
+      message: "承重墙不可拆除，存在安全隐患。建议采用垭口/半墙替代。"
+    source: "GB50009"
+
+  - id: A002
+    category: structural_safety
+    level: block
+    name: 承重墙禁止开大洞
+    condition:
+      action: open_hole
+      wall_type: bearing
+      width_gt: 1200
+    action:
+      type: block
+      message: "承重墙开洞宽度不得超过 1200mm，且需结构加固。"
+    source: "GB50009"
+
+  - id: A003
+    category: structural_safety
+    level: block
+    name: 管井禁止移位
+    condition:
+      action: move
+      element: [pipe_shaft, flue]
+    action:
+      type: block
+      message: "管井/烟道位置不可移动。"
+
+  - id: B001
+    category: code_compliance
+    level: warn_confirm
+    name: 卫生间防水范围
+    condition:
+      action: set_material
+      room_type: bathroom
+      material_not_in: [waterproof_coating]
+    action:
+      type: warn
+      message: "卫生间墙面/地面必须使用防水涂层，建议涂刷高度≥1800mm。"
+
+  - id: C001
+    category: ergonomics
+    level: optimize
+    name: 主通道宽度
+    condition:
+      corridor_width_lt: 900
+    action:
+      type: optimize
+      message: "主要通道建议≥900mm，当前过窄。"
+
+  - id: C002
+    category: ergonomics
+    level: optimize
+    name: 衣柜深度
+    condition:
+      furniture: wardrobe
+      depth_not_in: [550, 600]
+    action:
+      type: optimize
+      message: "衣柜深度建议 550–600mm。"
+
+  - id: C003
+    category: ergonomics
+    level: optimize
+    name: 床侧通道
+    condition:
+      furniture: bed
+      side_clearance_lt: 500
+    action:
+      type: optimize
+      message: "床侧需预留≥500mm 通行/取物空间。"

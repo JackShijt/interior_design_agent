@@ -1,0 +1,221 @@
+{
+  "project_id": "demo_001",
+  "unit": "mm",
+  "house": {
+    "walls": [
+      {
+        "id": "w1",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          4200,
+          0
+        ],
+        "thickness": 200,
+        "type": "bearing",
+        "height": 2800
+      },
+      {
+        "id": "w2",
+        "p1": [
+          4200,
+          0
+        ],
+        "p2": [
+          4200,
+          3600
+        ],
+        "thickness": 200,
+        "type": "partition",
+        "height": 2800
+      },
+      {
+        "id": "w3",
+        "p1": [
+          4200,
+          3600
+        ],
+        "p2": [
+          0,
+          3600
+        ],
+        "thickness": 200,
+        "type": "partition",
+        "height": 2800
+      },
+      {
+        "id": "w4",
+        "p1": [
+          0,
+          3600
+        ],
+        "p2": [
+          0,
+          0
+        ],
+        "thickness": 200,
+        "type": "bearing",
+        "height": 2800
+      }
+    ],
+    "openings": [
+      {
+        "id": "d1",
+        "wall_id": "w1",
+        "type": "door",
+        "offset": 1200,
+        "width": 900,
+        "height": 2100
+      }
+    ],
+    "rooms": [
+      {
+        "id": "r1",
+        "name": "主卧",
+        "type": "bedroom",
+        "poly": [
+          [
+            0,
+            0
+          ],
+          [
+            4200,
+            0
+          ],
+          [
+            4200,
+            3600
+          ],
+          [
+            0,
+            3600
+          ]
+        ],
+        "area": 15.12
+      }
+    ],
+    "fixed": [
+      {
+        "type": "pipe_shaft",
+        "poly": [
+          [
+            4000,
+            3400
+          ],
+          [
+            4200,
+            3400
+          ],
+          [
+            4200,
+            3600
+          ],
+          [
+            4000,
+            3600
+          ]
+        ]
+      }
+    ],
+    "original_walls": [
+      {
+        "id": "w1",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          4200,
+          0
+        ],
+        "thickness": 200,
+        "type": "bearing",
+        "height": 2800
+      },
+      {
+        "id": "w2",
+        "p1": [
+          4200,
+          0
+        ],
+        "p2": [
+          4200,
+          3600
+        ],
+        "thickness": 200,
+        "type": "partition",
+        "height": 2800
+      },
+      {
+        "id": "w3",
+        "p1": [
+          4200,
+          3600
+        ],
+        "p2": [
+          0,
+          3600
+        ],
+        "thickness": 200,
+        "type": "partition",
+        "height": 2800
+      },
+      {
+        "id": "w4",
+        "p1": [
+          0,
+          3600
+        ],
+        "p2": [
+          0,
+          0
+        ],
+        "thickness": 200,
+        "type": "bearing",
+        "height": 2800
+      }
+    ]
+  },
+  "design": {
+    "style": "modern_minimal",
+    "furniture": [
+      {
+        "id": "f_auto_1",
+        "cat": "wardrobe",
+        "model": "wd_01",
+        "pos": [
+          100,
+          100
+        ],
+        "size": [
+          1800,
+          600,
+          2400
+        ],
+        "price": 3200
+      }
+    ]
+  },
+  "engineering": {
+    "bom": [
+      {
+        "name": "wardrobe",
+        "model": "wd_01",
+        "size": [
+          1800,
+          600,
+          2400
+        ],
+        "price": 3200
+      }
+    ],
+    "quotation": {
+      "total": 3200,
+      "currency": "CNY"
+    },
+    "drawings": []
+  },
+  "pending_actions": []
+}
