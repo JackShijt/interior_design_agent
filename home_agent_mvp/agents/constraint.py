@@ -84,6 +84,22 @@ def _matches(cond: dict, scheme: dict) -> bool:
                     clearance = f["pos"][0]
                     if clearance < cond.get("side_clearance_lt", 0):
                         return True
+
+    # 兼容：规则 condition 直接以 furniture + depth_not_in / side_clearance_lt
+    # 表达（无需 action 字段，便于产品/算法配置）。
+    if cond.get("furniture") and (cond.get("depth_not_in") or cond.get("side_clearance_lt")):
+        for f in scheme["design"].get("furniture", []):
+            if f.get("cat") != cond.get("furniture"):
+                continue
+            if cond.get("depth_not_in"):
+                d = f["size"][1]
+                lo, hi = cond.get("depth_not_in", [0, 1e9])
+                if d < lo or d > hi:
+                    return True
+            if cond.get("side_clearance_lt"):
+                clearance = f["pos"][0]
+                if clearance < cond.get("side_clearance_lt", 0):
+                    return True
     return False
 
 

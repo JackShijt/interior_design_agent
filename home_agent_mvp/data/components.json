@@ -1,37 +1,48 @@
 {
   "components": [
-    {
-      "id": "wd_01", "cat": "wardrobe", "name": "现代简约趟门衣柜",
-      "size": [1800, 600, 2400],
-      "param_rules": {"width": [900, 3000], "depth": [500, 650]},
-      "materials": ["oak", "white_eco"],
-      "price": 3200,
-      "price_per_mm_width": 1.5,
-      "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}],
-      "drawing_rule": "立面图标注宽高深",
-      "style_tags": ["modern_minimal"]
-    },
-    {
-      "id": "bed_01", "cat": "bed", "name": "1.8m 双人床",
-      "size": [1800, 2000, 450],
-      "param_rules": {"width": [1000, 2000]},
-      "materials": ["fabric", "wood"],
-      "price": 2600,
-      "price_per_mm_width": 1.0,
-      "bom_template": [{"name": "床架", "unit": "套"}],
-      "drawing_rule": "平面标注外廓，侧边留通道≥500",
-      "style_tags": ["modern_minimal", "warm"]
-    },
-    {
-      "id": "sofa_01", "cat": "sofa", "name": "三人布艺沙发",
-      "size": [2200, 900, 800],
-      "param_rules": {"width": [1400, 3000]},
-      "materials": ["fabric"],
-      "price": 3500,
-      "price_per_mm_width": 1.2,
-      "bom_template": [{"name": "沙发", "unit": "套"}],
-      "drawing_rule": "平面标注外廓",
-      "style_tags": ["modern_minimal", "warm"]
-    }
+    {"id": "wd_01", "cat": "wardrobe", "name": "现代简约趟门衣柜", "size": [1800, 600, 2400], "param_rules": {"width": [900, 3000], "depth": [500, 650]}, "materials": ["oak", "white_eco"], "price": 3200, "price_per_mm_width": 1.5, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面图标注宽高深", "style_tags": ["modern_minimal"]},
+    {"id": "wd_02", "cat": "wardrobe", "name": "温馨原木平开门衣柜", "size": [1500, 580, 2200], "param_rules": {"width": [900, 2800], "depth": [500, 650]}, "materials": ["oak"], "price": 2800, "price_per_mm_width": 1.4, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面图标注宽高深", "style_tags": ["warm"]},
+    {"id": "wd_03", "cat": "wardrobe", "name": "步入式衣帽间组合", "size": [2400, 600, 2400], "param_rules": {"width": [1800, 4000], "depth": [500, 700]}, "materials": ["oak", "white_eco"], "price": 6500, "price_per_mm_width": 2.0, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面图标注宽高深", "style_tags": ["modern_minimal", "warm"]},
+
+    {"id": "bed_01", "cat": "bed", "name": "1.8m 双人床", "size": [1800, 2000, 450], "param_rules": {"width": [1000, 2000]}, "materials": ["fabric", "wood"], "price": 2600, "price_per_mm_width": 1.0, "bom_template": [{"name": "床架", "unit": "套"}], "drawing_rule": "平面标注外廓，侧边留通道≥500", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "bed_02", "cat": "bed", "name": "1.5m 双人床", "size": [1500, 2000, 450], "param_rules": {"width": [1000, 1800]}, "materials": ["fabric"], "price": 2200, "price_per_mm_width": 1.0, "bom_template": [{"name": "床架", "unit": "套"}], "drawing_rule": "平面标注外廓", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "bed_03", "cat": "bed", "name": "1.2m 单人床", "size": [1200, 2000, 450], "param_rules": {"width": [900, 1400]}, "materials": ["wood"], "price": 1500, "price_per_mm_width": 0.9, "bom_template": [{"name": "床架", "unit": "套"}], "drawing_rule": "平面标注外廓", "style_tags": ["modern_minimal", "warm"]},
+
+    {"id": "sofa_01", "cat": "sofa", "name": "三人布艺沙发", "size": [2200, 900, 800], "param_rules": {"width": [1400, 3000]}, "materials": ["fabric"], "price": 3500, "price_per_mm_width": 1.2, "bom_template": [{"name": "沙发", "unit": "套"}], "drawing_rule": "平面标注外廓", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "sofa_02", "cat": "sofa", "name": "单人皮质沙发", "size": [900, 900, 800], "param_rules": {"width": [800, 1200]}, "materials": ["leather"], "price": 2200, "price_per_mm_width": 1.5, "bom_template": [{"name": "沙发", "unit": "套"}], "drawing_rule": "平面标注外廓", "style_tags": ["modern_minimal"]},
+    {"id": "sofa_03", "cat": "sofa", "name": "双人布艺沙发", "size": [1600, 900, 800], "param_rules": {"width": [1200, 2000]}, "materials": ["fabric"], "price": 2800, "price_per_mm_width": 1.2, "bom_template": [{"name": "沙发", "unit": "套"}], "drawing_rule": "平面标注外廓", "style_tags": ["warm"]},
+
+    {"id": "desk_01", "cat": "desk", "name": "1.2m 书桌", "size": [1200, 600, 750], "param_rules": {"width": [800, 1800]}, "materials": ["oak", "white_eco"], "price": 900, "price_per_mm_width": 0.6, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "桌腿", "unit": "套"}], "drawing_rule": "立面标注高750", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "desk_02", "cat": "desk", "name": "1.6m 办公桌", "size": [1600, 700, 750], "param_rules": {"width": [1200, 2200]}, "materials": ["oak"], "price": 1400, "price_per_mm_width": 0.7, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "桌腿", "unit": "套"}], "drawing_rule": "立面标注高750", "style_tags": ["modern_minimal"]},
+    {"id": "desk_03", "cat": "desk", "name": "电脑桌带柜", "size": [1000, 600, 750], "param_rules": {"width": [800, 1400]}, "materials": ["white_eco"], "price": 1100, "price_per_mm_width": 0.8, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高750", "style_tags": ["modern_minimal", "warm"]},
+
+    {"id": "table_01", "cat": "table", "name": "1.4m 餐桌", "size": [1400, 800, 750], "param_rules": {"width": [1000, 2000]}, "materials": ["oak", "wood"], "price": 1600, "price_per_mm_width": 0.9, "bom_template": [{"name": "台面", "unit": "㎡"}, {"name": "桌腿", "unit": "套"}], "drawing_rule": "平面标注外廓", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "table_02", "cat": "table", "name": "1.8m 伸缩餐桌", "size": [1800, 900, 750], "param_rules": {"width": [1200, 2400]}, "materials": ["oak"], "price": 2400, "price_per_mm_width": 1.0, "bom_template": [{"name": "台面", "unit": "㎡"}, {"name": "桌腿", "unit": "套"}], "drawing_rule": "平面标注外廓", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "table_03", "cat": "table", "name": "岩板茶几", "size": [1200, 600, 450], "param_rules": {"width": [800, 1600]}, "materials": ["stone", "metal"], "price": 1300, "price_per_mm_width": 1.1, "bom_template": [{"name": "岩板", "unit": "㎡"}, {"name": "金属架", "unit": "套"}], "drawing_rule": "平面标注外廓", "style_tags": ["modern_minimal"]},
+
+    {"id": "nightstand_01", "cat": "nightstand", "name": "床头柜", "size": [500, 400, 500], "param_rules": {"width": [400, 600]}, "materials": ["oak", "white_eco"], "price": 400, "price_per_mm_width": 0.5, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高500", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "nightstand_02", "cat": "nightstand", "name": "简约床头柜", "size": [450, 400, 450], "param_rules": {"width": [400, 550]}, "materials": ["white_eco"], "price": 350, "price_per_mm_width": 0.5, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高450", "style_tags": ["modern_minimal"]},
+
+    {"id": "tv_cabinet_01", "cat": "tv_cabinet", "name": "2m 电视柜", "size": [2000, 400, 500], "param_rules": {"width": [1200, 3000]}, "materials": ["oak", "white_eco"], "price": 1800, "price_per_mm_width": 0.8, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高500", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "tv_cabinet_02", "cat": "tv_cabinet", "name": "悬浮电视柜", "size": [1800, 350, 450], "param_rules": {"width": [1200, 2600]}, "materials": ["white_eco"], "price": 1500, "price_per_mm_width": 0.8, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高450", "style_tags": ["modern_minimal"]},
+
+    {"id": "cabinet_01", "cat": "cabinet", "name": "餐边柜", "size": [1200, 400, 900], "param_rules": {"width": [800, 2000]}, "materials": ["oak", "white_eco"], "price": 1400, "price_per_mm_width": 0.9, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高900", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "cabinet_02", "cat": "cabinet", "name": "书柜", "size": [900, 350, 2100], "param_rules": {"width": [600, 1500]}, "materials": ["oak"], "price": 1600, "price_per_mm_width": 1.0, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高2100", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "cabinet_03", "cat": "cabinet", "name": "储物柜", "size": [800, 400, 2000], "param_rules": {"width": [600, 1200]}, "materials": ["white_eco"], "price": 1200, "price_per_mm_width": 0.9, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高2000", "style_tags": ["modern_minimal"]},
+
+    {"id": "kitchen_01", "cat": "kitchen", "name": "L型整体橱柜", "size": [3000, 600, 900], "param_rules": {"width": [2000, 5000]}, "materials": ["quartz", "wood"], "price": 8000, "price_per_mm_width": 2.5, "bom_template": [{"name": "柜体", "unit": "m"}, {"name": "台面", "unit": "m"}, {"name": "五金", "unit": "套"}], "drawing_rule": "平面标注走向+台面高900", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "kitchen_02", "cat": "kitchen", "name": "一字型橱柜", "size": [2400, 600, 900], "param_rules": {"width": [1800, 4000]}, "materials": ["quartz", "white_eco"], "price": 6000, "price_per_mm_width": 2.3, "bom_template": [{"name": "柜体", "unit": "m"}, {"name": "台面", "unit": "m"}, {"name": "五金", "unit": "套"}], "drawing_rule": "平面标注走向+台面高900", "style_tags": ["modern_minimal"]},
+
+    {"id": "bath_01", "cat": "bath_cabinet", "name": "浴室柜", "size": [1000, 500, 850], "param_rules": {"width": [600, 1500]}, "materials": ["pvc", "quartz"], "price": 1500, "price_per_mm_width": 1.2, "bom_template": [{"name": "柜体", "unit": "套"}, {"name": "台盆", "unit": "套"}, {"name": "镜柜", "unit": "套"}], "drawing_rule": "立面标注高850+防水", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "bath_02", "cat": "bath_cabinet", "name": "智能镜柜组合", "size": [1200, 500, 900], "param_rules": {"width": [800, 1600]}, "materials": ["pvc", "quartz"], "price": 2000, "price_per_mm_width": 1.3, "bom_template": [{"name": "柜体", "unit": "套"}, {"name": "台盆", "unit": "套"}, {"name": "镜柜", "unit": "套"}], "drawing_rule": "立面标注高900+防水", "style_tags": ["modern_minimal"]},
+
+    {"id": "shelf_01", "cat": "shelf", "name": "置物架", "size": [900, 300, 1800], "param_rules": {"width": [600, 1500]}, "materials": ["metal", "wood"], "price": 500, "price_per_mm_width": 0.4, "bom_template": [{"name": "层板", "unit": "㎡"}, {"name": "支架", "unit": "套"}], "drawing_rule": "立面标注高1800", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "shelf_02", "cat": "shelf", "name": "飘窗柜", "size": [1500, 600, 450], "param_rules": {"width": [1000, 2400]}, "materials": ["oak", "white_eco"], "price": 1100, "price_per_mm_width": 0.7, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "平面标注外廓", "style_tags": ["warm", "modern_minimal"]},
+
+    {"id": "shoe_01", "cat": "shoe_cabinet", "name": "玄关鞋柜", "size": [1000, 350, 1100], "param_rules": {"width": [600, 1800]}, "materials": ["white_eco", "oak"], "price": 900, "price_per_mm_width": 0.8, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高1100", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "shoe_02", "cat": "shoe_cabinet", "name": "翻斗鞋柜", "size": [800, 300, 1000], "param_rules": {"width": [600, 1200]}, "materials": ["white_eco"], "price": 600, "price_per_mm_width": 0.7, "bom_template": [{"name": "板材", "unit": "㎡"}, {"name": "五金", "unit": "套"}], "drawing_rule": "立面标注高1000", "style_tags": ["modern_minimal"]},
+
+    {"id": "chair_01", "cat": "chair", "name": "餐椅", "size": [450, 450, 900], "param_rules": {"width": [400, 500]}, "materials": ["wood", "fabric"], "price": 300, "price_per_mm_width": 0.3, "bom_template": [{"name": "椅架", "unit": "套"}], "drawing_rule": "立面标注高900", "style_tags": ["modern_minimal", "warm"]},
+    {"id": "chair_02", "cat": "chair", "name": "办公椅", "size": [500, 500, 1000], "param_rules": {"width": [450, 600]}, "materials": ["mesh", "metal"], "price": 700, "price_per_mm_width": 0.5, "bom_template": [{"name": "椅架", "unit": "套"}], "drawing_rule": "立面标注高1000", "style_tags": ["modern_minimal"]}
   ]
 }
