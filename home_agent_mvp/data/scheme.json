@@ -190,18 +190,18 @@
           100
         ],
         "size": [
-          2100,
+          1800,
           600,
           2400
         ],
-        "price": 5300
+        "price": 3200
       },
       {
         "id": "f_auto_2",
         "cat": "bed",
         "model": "bed_01",
         "pos": [
-          100,
+          1950,
           100
         ],
         "size": [
@@ -216,28 +216,50 @@
   "engineering": {
     "bom": [
       {
-        "name": "wardrobe",
+        "name": "现代简约趟门衣柜",
         "model": "wd_01",
+        "cat": "wardrobe",
         "size": [
-          2100,
+          1800,
           600,
           2400
         ],
-        "price": 5300
+        "bom_template": [
+          {
+            "name": "板材",
+            "unit": "㎡"
+          },
+          {
+            "name": "五金",
+            "unit": "套"
+          }
+        ],
+        "unit_price": 3200,
+        "qty": 1,
+        "subtotal": 3200
       },
       {
-        "name": "bed",
+        "name": "1.8m 双人床",
         "model": "bed_01",
+        "cat": "bed",
         "size": [
           1800,
           2000,
           450
         ],
-        "price": 2600
+        "bom_template": [
+          {
+            "name": "床架",
+            "unit": "套"
+          }
+        ],
+        "unit_price": 2600,
+        "qty": 1,
+        "subtotal": 2600
       }
     ],
     "quotation": {
-      "total": 7900,
+      "total": 5800,
       "currency": "CNY"
     },
     "drawings": []

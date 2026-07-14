@@ -10,50 +10,73 @@ interior_design_agent/
 ├── README.md                 # 本文件
 ├── SOLO_ROADMAP.md           # B：单人 agent 时序任务清单
 ├── WEEK1_AGENT_PROMPTS.md    # C：第一周给 agent 的指令集（直接复制用）
+├── WEEKLY_TASKS.md           # 逐周任务卡（直接让 agent 按周执行）
 ├── home_agent_mvp/           # A：可运行项目脚手架
-│   ├── app.py                # Flask 服务入口
+│   ├── app.py                # Flask 服务入口（含 /generate /dialog /render_scene /export /snapshot /undo /confirm_demolition）
 │   ├── agents/               # 各 Agent 模块
-│   │   ├── understand.py     # 户型识别（MVP 用 Mock，留接口）
-│   │   ├── planner.py        # 规划 Agent（LLM 调用占位）
-│   │   ├── generator.py      # 生成 Agent（可控构件拼装）
-│   │   ├── constraint.py     # 约束引擎
-│   │   └── dialog.py         # 对话 Agent（Function Calling 思路）
+│   │   ├── understand.py     # 户型识别（MVP Mock，留外部 API 接入骨架）
+│   │   ├── planner.py        # 规划 Agent（LLM 调用，无 Key 降级）
+│   │   ├── generator.py      # 生成 Agent（按风格筛选构件拼装）
+│   │   ├── constraint.py     # 约束引擎（承重墙/防水/通道等红线）
+│   │   └── dialog.py         # 对话 Agent（LLM Function Calling，无 Key 降级）
 │   ├── data/
 │   │   ├── scheme.json       # 单一数据骨架（方案 JSON）
-│   │   ├── components.json   # 参数化构件库
-│   │   └── constraints.yaml  # 约束规则库
+│   │   ├── components.json   # 参数化构件库（33 件，含 BOM 模板+单价）
+│   │   ├── constraints.yaml  # 约束规则库
+│   │   └── versions.json     # 方案快照（撤销用，运行时生成）
 │   ├── render/
-│   │   └── mock_render.py    # Mock 渲染（真实接云渲染）
+│   │   ├── mock_render.py    # Mock 渲染
+│   │   └── scene.py          # scheme → Three.js 场景描述
 │   ├── engineering/
-│   │   └── bom.py            # 算量/报价/出图（Mock）
-│   ├── tests/                # pytest 单测
-│   │   ├── test_constraint.py
-│   │   └── test_dialog.py
+│   │   ├── bom.py            # 算量/报价（分项明细）
+│   │   └── export_pdf.py     # PDF 交付包（纯标准库生成）
+│   ├── frontend/
+│   │   └── index.html        # Three.js 3D Viewer + 对话/快照/撤销 UI
+│   ├── tests/                # pytest 单测（35 用例）
 │   ├── requirements.txt
-│   └── run.sh                # 一键启动
-└── docs/                     # 调研与方案文档（见下文"配套资料"）
+│   └── run.sh                # 一键启动（端口 5001）
+└── docs/                     # 调研与方案文档
+    ├── compliance.md         # 合规文案与隐私脱敏
+    ├── known_limitations.md  # 已知限制清单
+    └── floorplan_recognition_options.md  # 户型识别选型
 ```
 
 ## 快速开始
 
 ```bash
 cd home_agent_mvp
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-bash run.sh
-# 另开终端：
-curl -X POST localhost:5000/generate -H "Content-Type: application/json" \
-  -d '{"need":"现代简约 两口之家 多收纳"}'
-curl -X POST localhost:5000/dialog -H "Content-Type: application/json" \
-  -d '{"text":"主卧衣柜加长 30cm"}'
+bash run.sh            # 默认 http://127.0.0.1:5001
 ```
+
+打开浏览器访问 http://127.0.0.1:5001 ：可一键生成、3D 旋转查看、对话框改方案、快照/撤销、导出 PDF。
+
+API 调试（命令行）：
+```bash
+curl -X POST http://127.0.0.1:5001/generate -H "Content-Type: application/json" \
+  -d '{"need":"现代简约 两口之家 多收纳"}'
+curl -X POST http://127.0.0.1:5001/dialog -H "Content-Type: application/json" \
+  -d '{"text":"主卧衣柜加长 30cm"}'
+curl -X POST http://127.0.0.1:5001/export
+```
+
+### 接入真实 LLM / 识别（可选，环境变量注入，不硬编码）
+```bash
+export LLM_API_KEY="你的Key"
+export MODEL_NAME="gpt-4o-mini"          # 或 deepseek-chat
+export LLM_BASE_URL="https://api.deepseek.com/v1"   # 兼容 OpenAI 接口
+export RECOGNITION_API_URL="https://xxx/recognize"  # 户型识别服务（待实现 _call_external_api）
+```
+不设置时，planner/dialog 自动走规则降级，识别走内置 Mock 户型。
 
 ## 单人启动三步走
 
-1. 先跑通 `home_agent_mvp`（阶段 A：骨架闭环）。
-2. 替换 Mock：接真实 LLM API 做规划/对话，接开源户型识别做理解（阶段 B）。
-3. 接云渲染 + 工程出图 + 小程序（阶段 C）。
+1. 先跑通 `home_agent_mvp`（第 1–2 周：骨架闭环 + 单测）。
+2. 按 `WEEKLY_TASKS.md` 逐周让 agent 推进（第 3–11 周：真 LLM/识别、构件库、渲染、出图、对话同步）。
+3. 第 12 周：真实用户测试 + 合规上线。
 
-详细时序见 `SOLO_ROADMAP.md`，第一周指令见 `WEEK1_AGENT_PROMPTS.md`。
+详细逐周指令见 `WEEKLY_TASKS.md`。
 
 ## 配套资料（调研与方案文档）
 
@@ -78,3 +101,17 @@ curl -X POST localhost:5000/dialog -H "Content-Type: application/json" \
 **P0 生死线**：承重墙判定、合规安全、全链路同步必须最先做且不可妥协。
 **MVP 用可控构件拼装**，不碰自由生成式 3D，降低不可控风险。
 **LLM 只做推理，数值全走规则引擎/BOM**，避免幻觉编造尺寸价格。
+**安全红线**：拆承重墙 100% 阻断或强制人工确认，审计可追溯（`data/audit.log`）。
+
+## 合规与隐私
+
+- 户型图在本地/授权环境处理，不上传第三方（详见 `docs/compliance.md`）；
+- AI 生成方案仅供参考，施工前须专业工程师复核；
+- 不收集用户敏感信息，密钥仅经环境变量注入，禁止硬编码。
+
+## 测试
+
+```bash
+cd home_agent_mvp && source .venv/bin/activate
+python -m pytest tests/ -q    # 35 passed
+```

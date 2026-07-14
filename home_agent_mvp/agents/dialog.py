@@ -80,6 +80,29 @@ FUNCTIONS = [
             "required": ["cat"],
         },
     },
+    {
+        "name": "remove_wall",
+        "description": "拆除墙体（红线操作，需人工确认；承重墙禁止）",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "wall_type": {"type": "string", "enum": ["bearing", "partition", "suspect_load_bearing"]},
+            },
+            "required": ["wall_type"],
+        },
+    },
+    {
+        "name": "open_hole",
+        "description": "在墙上开洞（红线操作，承重墙开洞受限）",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "wall_type": {"type": "string", "enum": ["bearing", "partition"]},
+                "width_mm": {"type": "integer", "description": "开洞宽度 mm"},
+            },
+            "required": ["wall_type"],
+        },
+    },
 ]
 
 
@@ -142,6 +165,16 @@ def _exec_function(name, args, scheme, rules):
         before = len(scheme["design"]["furniture"])
         scheme["design"]["furniture"] = [f for f in scheme["design"]["furniture"] if f["cat"] != cat]
         msg = f"已移除 {CAT_KEYWORDS.get(cat, cat)}（{before - len(scheme['design']['furniture'])} 件）"
+    elif name == "remove_wall":
+        # 红线操作：记录意图到 pending_actions，由约束引擎判定是否阻断
+        scheme.setdefault("pending_actions", []).append(
+            {"action": "remove_wall", "wall_type": args["wall_type"]})
+        msg = f"申请拆除 {args['wall_type']} 墙（需人工确认）"
+    elif name == "open_hole":
+        width = args.get("width_mm", 0)
+        scheme.setdefault("pending_actions", []).append(
+            {"action": "open_hole", "wall_type": args["wall_type"], "width": width})
+        msg = f"申请在 {args['wall_type']} 墙开洞（宽 {width}mm，需人工确认）"
     else:
         return scheme, "未知指令。"
 
@@ -149,7 +182,8 @@ def _exec_function(name, args, scheme, rules):
     ok, report = _check(scheme, rules)
     if not ok:
         alt = _alternative(report)
-        return scheme, alt or "修改违反约束。"
+        # 红线阻断：保留意图供 /confirm_demolition 人工确认
+        return scheme, "[需人工确认] " + (alt or "修改违反约束。")
     return scheme, msg
 
 
@@ -226,8 +260,24 @@ def _regex_handle(scheme, text):
                 msgs.append(f"已移除 {CAT_KEYWORDS[cat]}（{before - len(scheme['design']['furniture'])} 件）")
                 break
 
+    # 拆墙/开洞红线意图（降级简化）
+    if not changed and ("拆" in text or "打掉" in text or "开洞" in text):
+        if "承重" in text:
+            wtype = "bearing"
+        elif "隔" in text or "非承重" in text:
+            wtype = "partition"
+        else:
+            wtype = "suspect_load_bearing"
+        hole_m = re.search(r"开洞.*?(\d+)\s*mm", text) or re.search(r"(\d+)\s*mm.*?洞", text)
+        width = int(hole_m.group(1)) if hole_m else 0
+        action = "open_hole" if "洞" in text else "remove_wall"
+        scheme.setdefault("pending_actions", []).append(
+            {"action": action, "wall_type": wtype, **({"width": width} if action == "open_hole" else {})})
+        changed = True
+        msgs.append(f"申请{'开洞' if action == 'open_hole' else '拆除'} {wtype} 墙（需人工确认）")
+
     if not changed:
-        return scheme, "暂未理解该指令（MVP 仅支持尺寸修改/风格切换/移动/增减示例）。"
+        return scheme, "暂未理解该指令（MVP 仅支持尺寸修改/风格切换/移动/增减/拆墙示例）。"
     return scheme, "；".join(msgs)
 
 

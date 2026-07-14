@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI 室内设计 · 3D 预览</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #1e1e1e; color: #eee; }
+    #bar { padding: 8px 12px; display: flex; gap: 8px; align-items: center; background: #2a2a2a; }
+    button { padding: 6px 12px; cursor: pointer; }
+    #hint { font-size: 12px; color: #aaa; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <div id="bar">
+    <button onclick="generate()">一键生成</button>
+    <input id="need" value="现代简约 两口之家 多收纳" style="flex:1" />
+    <span id="hint">拖拽旋转 · 滚轮缩放</span>
+  </div>
+  <div id="dialog-bar" style="padding:8px 12px;display:flex;gap:8px;background:#2a2a2a;align-items:center;">
+    <input id="cmd" placeholder="说点什么，如：主卧衣柜加长30cm / 换成暖色调" style="flex:1;padding:6px;" />
+    <button onclick="sendCmd()">发送</button>
+    <button onclick="snapshot()">快照</button>
+    <button onclick="undo()">撤销</button>
+    <span id="msg" style="color:#8cf;font-size:13px;"></span>
+  </div>
+  <div id="diff" style="position:fixed;right:12px;top:64px;width:240px;background:#222;padding:10px;font-size:12px;border-radius:6px;color:#ccc;"></div>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1e1e1e);
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
+    camera.position.set(300, 300, 300);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    const dir = new THREE.DirectionalLight(0xffffff, 0.6);
+    dir.position.set(200, 400, 200);
+    scene.add(dir);
+
+    const root = new THREE.Group();
+    scene.add(root);
+
+    const COLORS = {
+      bearing: 0xcc4444, partition: 0x888888, suspect_load_bearing: 0xddaa44,
+      wardrobe: 0x4a90d9, bed: 0x66bb66, sofa: 0xcc8844, default: 0x999999,
+    };
+
+    async function loadScene() {
+      const res = await fetch('/render_scene');
+      const data = await res.json();
+      buildScene(data);
+    }
+
+    function clearRoot() { while (root.children.length) root.remove(root.children[0]); }
+
+    function buildScene(data) {
+      clearRoot();
+      const s = data.scale || 0.01;
+      // 墙体
+      (data.walls || []).forEach(w => {
+        const box = wallBox(w, s);
+        const mesh = new THREE.Mesh(
+          new THREE.BoxGeometry(box.size[0], box.size[2], box.size[1]),
+          new THREE.MeshStandardMaterial({ color: COLORS[w.type] || 0x888888, opacity: 0.85, transparent: true })
+        );
+        mesh.position.set(box.center[0] * s, box.center[2] * s, box.center[1] * s);
+        root.add(mesh);
+      });
+      // 房间地面
+      (data.rooms || []).forEach(r => {
+        const pts = r.poly.map(p => new THREE.Vector3(p[0] * s, 0, p[1] * s));
+        if (pts.length < 3) return;
+        const shape = new THREE.Shape(pts);
+        const geo = new THREE.ShapeGeometry(shape);
+        const floor = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x333a44, side: THREE.DoubleSide }));
+        floor.rotation.x = -Math.PI / 2;
+        root.add(floor);
+      });
+      // 家具
+      (data.furniture || []).forEach(f => {
+        const [w, d, h] = f.size;
+        const mesh = new THREE.Mesh(
+          new THREE.BoxGeometry(w * s, h * s, d * s),
+          new THREE.MeshStandardMaterial({ color: COLORS[f.cat] || COLORS.default })
+        );
+        mesh.position.set(f.pos[0] * s, (h / 2) * s, f.pos[1] * s);
+        root.add(mesh);
+      });
+    }
+
+    function wallBox(wall, s) {
+      const x1 = wall.p1[0], y1 = wall.p1[1], x2 = wall.p2[0], y2 = wall.p2[1];
+      const h = wall.height || 2800, t = wall.thickness || 200;
+      const cx = (x1 + x2) / 2, cy = (y1 + y2) / 2;
+      const dx = Math.abs(x2 - x1), dy = Math.abs(y2 - y1);
+      let size;
+      if (dx >= dy) size = [Math.max(dx, t), t, h]; else size = [t, Math.max(dy, t), h];
+      return { center: [cx, cy, h / 2], size };
+    }
+
+    async function generate() {
+      const need = document.getElementById('need').value;
+      const data = await (await fetch('/generate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ need }),
+      })).json();
+      window.__lastQuotation = data.scheme?.engineering?.quotation?.total ?? 0;
+      await loadScene();
+    }
+
+    async function sendCmd() {
+      const text = document.getElementById('cmd').value;
+      if (!text) return;
+      const prev = window.__lastQuotation || 0;
+      const res = await fetch('/dialog', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+      const data = await res.json();
+      document.getElementById('msg').textContent = data.message || JSON.stringify(data.report || {});
+      const now = data.scheme?.engineering?.quotation?.total ?? prev;
+      window.__lastQuotation = now;
+      await loadScene();
+      showDiff(prev, now);
+    }
+
+    function showDiff(prev, now) {
+      const el = document.getElementById('diff');
+      const delta = now - prev;
+      const sign = delta >= 0 ? '+' : '';
+      el.innerHTML = `<b>变更</b><br/>报价: ¥${prev} → ¥${now} <span style="color:#fa6">(${sign}${delta})</span>`;
+    }
+
+    async function snapshot() {
+      await fetch('/snapshot', { method: 'POST' });
+      document.getElementById('msg').textContent = '已保存快照';
+    }
+
+    async function undo() {
+      const r = await fetch('/undo', { method: 'POST' });
+      const data = await r.json();
+      if (data.error) { document.getElementById('msg').textContent = data.error; return; }
+      document.getElementById('msg').textContent = '已撤销';
+      window.__lastQuotation = data.scheme?.engineering?.quotation?.total ?? 0;
+      await loadScene();
+    }
+
+    window.generate = generate;
+    window.sendCmd = sendCmd;
+    window.snapshot = snapshot;
+    window.undo = undo;
+    loadScene();
+    (function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); })();
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
