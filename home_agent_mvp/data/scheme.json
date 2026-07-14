@@ -190,11 +190,26 @@
           100
         ],
         "size": [
-          1800,
+          2100,
           600,
           2400
         ],
-        "price": 3200
+        "price": 5300
+      },
+      {
+        "id": "f_auto_2",
+        "cat": "bed",
+        "model": "bed_01",
+        "pos": [
+          100,
+          100
+        ],
+        "size": [
+          1800,
+          2000,
+          450
+        ],
+        "price": 2600
       }
     ]
   },
@@ -204,15 +219,25 @@
         "name": "wardrobe",
         "model": "wd_01",
         "size": [
-          1800,
+          2100,
           600,
           2400
         ],
-        "price": 3200
+        "price": 5300
+      },
+      {
+        "name": "bed",
+        "model": "bed_01",
+        "size": [
+          1800,
+          2000,
+          450
+        ],
+        "price": 2600
       }
     ],
     "quotation": {
-      "total": 3200,
+      "total": 7900,
       "currency": "CNY"
     },
     "drawings": []
