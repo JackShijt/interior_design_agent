@@ -33,7 +33,18 @@ def to_scene(scheme: dict) -> dict:
 
     rooms = []
     for r in house.get("rooms", []):
-        rooms.append({"name": r.get("name", ""), "poly": r.get("poly", [])})
+        rooms.append({"name": r.get("name", ""), "poly": r.get("poly", []), "area": r.get("area")})
+
+    openings = []
+    for op in house.get("openings", []):
+        openings.append({
+            "id": op.get("id"),
+            "wall_id": op.get("wall_id"),
+            "type": op.get("type", "door"),
+            "offset": op.get("offset", 0),
+            "width": op.get("width", 900),
+            "height": op.get("height", 2100),
+        })
 
     furniture = []
     for f in design.get("furniture", []):
@@ -49,6 +60,7 @@ def to_scene(scheme: dict) -> dict:
         "scale": 0.01,
         "walls": walls,
         "rooms": rooms,
+        "openings": openings,
         "furniture": furniture,
         "style": design.get("style", "modern_minimal"),
     }

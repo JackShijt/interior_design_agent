@@ -193,8 +193,7 @@
           1800,
           600,
           2400
-        ],
-        "price": 3200
+        ]
       },
       {
         "id": "f_auto_2",
@@ -208,8 +207,7 @@
           1800,
           2000,
           450
-        ],
-        "price": 2600
+        ]
       }
     ]
   },
@@ -224,19 +222,21 @@
           600,
           2400
         ],
-        "bom_template": [
+        "qty": 1,
+        "items": [
           {
             "name": "板材",
-            "unit": "㎡"
+            "unit": "㎡",
+            "qty": 1.08,
+            "material": "oak"
           },
           {
             "name": "五金",
-            "unit": "套"
+            "unit": "套",
+            "qty": 1.0,
+            "material": "oak"
           }
-        ],
-        "unit_price": 3200,
-        "qty": 1,
-        "subtotal": 3200
+        ]
       },
       {
         "name": "1.8m 双人床",
@@ -247,21 +247,17 @@
           2000,
           450
         ],
-        "bom_template": [
+        "qty": 1,
+        "items": [
           {
             "name": "床架",
-            "unit": "套"
+            "unit": "套",
+            "qty": 1.0,
+            "material": "fabric"
           }
-        ],
-        "unit_price": 2600,
-        "qty": 1,
-        "subtotal": 2600
+        ]
       }
     ],
-    "quotation": {
-      "total": 5800,
-      "currency": "CNY"
-    },
     "drawings": []
   },
   "pending_actions": []

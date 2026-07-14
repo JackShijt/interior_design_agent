@@ -52,3 +52,24 @@ def test_snapshot_and_undo(tmp_path):
     restored = client.get("/render_scene").get_json()
     w_res = [f["size"] for f in restored["furniture"] if f["cat"] == "wardrobe"][0][0]
     assert w_res == w_mod - 300
+
+
+def test_session_context_reference_across_requests(tmp_path):
+    """同一 session_id 下，第二轮'再大点'应延续上一轮衣柜尺寸（跨 HTTP 请求记忆）。"""
+    import app as flask_app
+    client, sf = _setup(tmp_path)
+    client.post("/generate", json={"need": "现代简约 多收纳"})
+    # 第一轮：明确对象
+    client.post("/dialog", json={"text": "主卧衣柜加长 30cm", "session_id": "ctx_sess"})
+    after1 = client.get("/render_scene").get_json()
+    w1 = [f["size"] for f in after1["furniture"] if f["cat"] == "wardrobe"][0][0]
+    # 第二轮：指代延续（不重复说"衣柜"）
+    r2 = client.post("/dialog", json={"text": "再大点", "session_id": "ctx_sess"})
+    assert r2.status_code == 200
+    after2 = client.get("/render_scene").get_json()
+    w2 = [f["size"] for f in after2["furniture"] if f["cat"] == "wardrobe"][0][0]
+    assert w2 == w1 + 100  # 默认 +100mm 指代延续
+    # 不同 session 不应串上下文
+    r3 = client.post("/dialog", json={"text": "再大点", "session_id": "other_sess"})
+    # other_sess 无历史 → 无法指代，返回未理解（不崩溃）
+    assert "暂未理解" in r3.get_json()["message"] or "衣柜" in r3.get_json()["message"]

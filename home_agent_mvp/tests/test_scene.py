@@ -7,7 +7,13 @@ BASE = os.path.join(os.path.dirname(__file__), "..")
 
 def _scheme():
     with open(os.path.join(BASE, "data", "scheme.json"), encoding="utf-8") as f:
-        return json.load(f)
+        s = json.load(f)
+    if not s["design"].get("furniture"):
+        s["design"]["furniture"] = [
+            {"id": "f1", "cat": "wardrobe", "model": "wd_01",
+             "pos": [100, 100], "size": [1800, 600, 2400]},
+        ]
+    return s
 
 
 def test_to_scene_structure():

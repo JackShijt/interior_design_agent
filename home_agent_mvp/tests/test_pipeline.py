@@ -36,13 +36,14 @@ def test_full_pipeline_mock():
     ok, report = constraint.evaluate(scheme, rules)
     assert ok is True
 
-    # 5. 算量
+    # 5. 算量（材料/工程量清单，无费用）
     scheme = eng.calc_bom(scheme)
-    assert scheme["engineering"]["quotation"]["total"] > 0
+    assert len(scheme["engineering"]["bom"]) >= 1
+    assert "quotation" not in scheme["engineering"]
 
-    # 6. 对话修改（mock 正则：加长衣柜 30cm）
+    # 6. 对话修改（mock 正则：加长衣柜 30cm），三元返回 (scheme, msg, context)
     before = [f for f in scheme["design"]["furniture"] if f["cat"] == "wardrobe"][0]["size"][0]
-    scheme, msg = dialog.dialog_with_mock(scheme, "主卧衣柜加长 30cm")
+    scheme, msg, ctx = dialog.dialog_with_mock(scheme, "主卧衣柜加长 30cm")
     after = [f for f in scheme["design"]["furniture"] if f["cat"] == "wardrobe"][0]["size"][0]
     assert after == before + 300
 
@@ -50,4 +51,4 @@ def test_full_pipeline_mock():
     ok2, _ = constraint.evaluate(scheme, rules)
     assert ok2 is True
     scheme = eng.calc_bom(scheme)
-    assert scheme["engineering"]["quotation"]["total"] > 0
+    assert len(scheme["engineering"]["bom"]) >= 1

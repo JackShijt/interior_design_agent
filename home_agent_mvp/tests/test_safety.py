@@ -38,7 +38,7 @@ def test_bearing_demolition_not_auto_executed():
     from agents import dialog
     s = _scheme_with_bearing()
     os.environ.pop("LLM_API_KEY", None)
-    s, msg = dialog.dialog_with_mock(s, "拆掉承重墙")
+    s, msg, ctx = dialog.dialog_with_mock(s, "拆掉承重墙")
     # 红线生效：被阻断并返回替代方案
     assert "承重墙不可拆除" in msg
     # 意图仍记录在 pending_actions，供审计/确认展示

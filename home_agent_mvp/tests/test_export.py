@@ -1,4 +1,4 @@
-"""第 10 周：工程出图 / PDF 交付包单测。"""
+"""施工图（CAD/SVG）生成单测 —— 取代旧的 PDF 报价交付包。"""
 import os
 import json
 import tempfile
@@ -11,41 +11,47 @@ def _scheme():
         return json.load(f)
 
 
-def test_bom_detail_has_subtotal():
-    """bom.calc_bom 输出分项明细且 total 为各 subtotal 之和。"""
+def test_bom_is_material_list():
+    """bom.calc_bom 输出材料清单，且无报价字段。"""
     from engineering import bom as eng
     s = _scheme()
     out = eng.calc_bom(s)
-    items = out["engineering"]["bom"]
-    assert len(items) >= 1
-    assert all("subtotal" in it and "name" in it for it in items)
-    assert out["engineering"]["quotation"]["total"] == sum(i["subtotal"] for i in items)
+    assert "bom" in out["engineering"]
+    assert "quotation" not in out["engineering"]
 
 
-def test_export_pdf_contains_total():
-    """export_pdf 生成 PDF 且文件含报价总额文本。"""
-    from engineering import export_pdf as exporter
+def test_export_svg_is_valid():
+    """export_cad 始终生成 SVG，内容为合法 svg。"""
+    from engineering import cad
     s = _scheme()
-    s = eng_bom(s)
-    tmp = tempfile.mktemp(suffix=".pdf")
-    path = exporter.export_pdf(s, tmp)
-    assert os.path.exists(path)
-    data = open(path, "rb").read()
-    # 最小合法 PDF 头
-    assert data.startswith(b"%PDF")
-    assert b"%%EOF" in data
-    os.unlink(tmp)
+    tmp = tempfile.mkdtemp()
+    out = cad.export_cad(s, tmp)
+    assert os.path.exists(out["svg"])
+    data = open(out["svg"], encoding="utf-8").read()
+    assert data.lstrip().startswith("<svg")
+    assert "</svg>" in data
 
 
-def eng_bom(s):
-    from engineering import bom as eng
-    return eng.calc_bom(s)
-
-
-def test_water_points_rule_based():
-    """水电点位为规则生成（非 LLM）。"""
-    from engineering import export_pdf as exporter
+def test_export_dxf_when_ezdxf_available():
+    """若安装了 ezdxf，则生成合法 DXF（AutoCAD 可打开）。"""
+    from engineering import cad
+    if not cad._HAS_EZDXF:
+        import pytest
+        pytest.skip("ezdxf 未安装，走 SVG 降级")
     s = _scheme()
-    pts = exporter._水电点点位(s)
+    tmp = tempfile.mkdtemp()
+    out = cad.export_cad(s, tmp)
+    assert out["format"] == "dxf"
+    assert out["dxf"] and os.path.exists(out["dxf"])
+    head = open(out["dxf"], "rb").read(64)
+    # DXF 文件以 SECTION 段开头
+    assert b"SECTION" in open(out["dxf"], "rb").read(2000)
+
+
+def test_mep_points_rule_based():
+    """水电点位为规则生成（非 LLM），含坐标与说明。"""
+    from engineering import cad
+    s = _scheme()
+    pts = cad.mep_points(s)
     assert len(pts) >= 1
-    assert any("插座" in p or "防水" in p for p in pts)
+    assert all("pos" in p and "label" in p and "kind" in p for p in pts)

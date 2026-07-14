@@ -77,7 +77,6 @@ def generate(scheme: dict, user_need: str) -> dict:
             "model": c["id"],
             "pos": [x_cursor, 100],
             "size": list(c["size"]),
-            "price": c["price"],
         })
         x_cursor += c["size"][0] + 50
 
